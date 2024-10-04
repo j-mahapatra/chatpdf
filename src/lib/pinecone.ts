@@ -4,7 +4,7 @@ import {
   RecordMetadata,
 } from '@pinecone-database/pinecone';
 import { FileObject, PDFDocument } from './types';
-import { downloadFromS3 } from './s3';
+import { downloadFromS3 } from './s3-server';
 import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { getEmbedding } from './embedding';

@@ -7,15 +7,26 @@ import { Loader, Rocket, Settings2 } from 'lucide-react';
 import React from 'react';
 import toast from 'react-hot-toast';
 import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 type ManageSubscriptionProps = {
-  isPlusUser: boolean;
+  className?: string;
 };
 
 export default function ManageSubscription({
-  isPlusUser,
+  className,
 }: ManageSubscriptionProps) {
   const { user } = useUser();
+
+  const { data: isPlusUser, isLoading: isSubscriptionCheckLoading } = useQuery({
+    queryKey: ['plus', user?.id],
+
+    queryFn: async () => {
+      const res = await axios.get('/api/subscription');
+      return res.data.isPlusUser;
+    },
+    refetchOnMount: true,
+  });
 
   const { isLoading, refetch } = useQuery({
     queryKey: ['payments', user?.id],
@@ -37,16 +48,18 @@ export default function ManageSubscription({
   return (
     <Button
       onClick={() => refetch()}
-      className='flex justify-center'
+      className={cn('flex justify-center items-center', className)}
       disabled={isLoading}
     >
-      {isLoading && <Loader className='w-6 h-6 mr-2 animate-spin' />}
-      {isLoading ? null : isPlusUser ? (
+      {(isLoading || isSubscriptionCheckLoading) && (
+        <Loader className='w-6 h-6 animate-spin' />
+      )}
+      {isLoading || isSubscriptionCheckLoading ? null : isPlusUser ? (
         <Settings2 className='w-6 h-6 mr-2' />
       ) : (
         <Rocket className='w-6 h-6 mr-2' />
       )}
-      {isLoading
+      {isLoading || isSubscriptionCheckLoading
         ? null
         : isPlusUser
           ? 'Manage Subscription'
