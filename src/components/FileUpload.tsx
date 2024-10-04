@@ -1,12 +1,26 @@
 'use client';
 
-import { uploadToS3 } from '@/lib/s3';
-import { FilePlus2 } from 'lucide-react';
 import React from 'react';
-import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import { FilePlus2, Loader } from 'lucide-react';
+import { useDropzone } from 'react-dropzone';
+import { uploadToS3 } from '@/lib/s3';
+import { FileObject } from '@/lib/types';
 
 export default function FileUpload() {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({ fileKey, fileName }: FileObject) => {
+      const response = await axios.post('/api/create-chat', {
+        fileKey,
+        fileName,
+      });
+      const data: FileObject = response.data;
+      return data;
+    },
+  });
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
@@ -24,7 +38,20 @@ export default function FileUpload() {
         }
 
         const fileData = await uploadToS3(file);
-        console.log(fileData);
+
+        if (!fileData) {
+          toast.error('Failed to upload file');
+          return;
+        }
+
+        mutate(fileData, {
+          onSuccess: () => {
+            toast.success('File uploaded successfully');
+          },
+          onError: () => {
+            toast.error('Failed to upload file');
+          },
+        });
       } catch (_) {
         toast.error('Failed to upload file');
       }
@@ -39,12 +66,16 @@ export default function FileUpload() {
       })}
     >
       <input {...getInputProps()} />
-      <FilePlus2 className='h-12 w-12 mb-5' />
+      {isPending ? (
+        <Loader className='h-12 w-12 mb-5 animate-spin' />
+      ) : (
+        <FilePlus2 className='h-12 w-12 mb-5' />
+      )}
       {isDragActive ? (
         <p className='text-center w-44'>Drop the file here ...</p>
       ) : (
         <p className='text-center w-44'>
-          {'Drag & drop PDF here, or click to select files'}
+          Drag & drop PDF here, or click to select a file
         </p>
       )}
     </div>
