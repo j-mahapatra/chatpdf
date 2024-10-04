@@ -1,19 +1,30 @@
 'use client';
 
 import React from 'react';
-import { useChat } from 'ai/react';
+import { Message, useChat } from 'ai/react';
 import { Input } from '@/components/ui/input';
 import MessageList from './MessageList';
 import { Send } from 'lucide-react';
 import { Button } from './ui/button';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 export default function ChatBox({ chatId }: { chatId: number }) {
+  const { data, isLoading: areInitialMessagesLoading } = useQuery({
+    queryKey: ['messages', chatId],
+    queryFn: async () => {
+      const res = await axios.get<Message[]>(`/api/messages?chatId=${chatId}`);
+      return res.data;
+    },
+  });
+
   const { messages, input, handleSubmit, handleInputChange, isLoading } =
     useChat({
       api: '/api/chat',
       body: {
         chatId,
       },
+      initialMessages: data ?? [],
     });
 
   return (
@@ -23,7 +34,10 @@ export default function ChatBox({ chatId }: { chatId: number }) {
       </div>
 
       <div className='flex-1 overflow-y-auto p-2 flex flex-col-reverse'>
-        <MessageList messages={messages} />
+        <MessageList
+          messages={messages}
+          isLoading={areInitialMessagesLoading}
+        />
       </div>
 
       <form

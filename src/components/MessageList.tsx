@@ -1,18 +1,22 @@
 import { cn } from '@/lib/utils';
 import { Message } from 'ai/react';
+import { Loader } from 'lucide-react';
 import React from 'react';
 
 type MessageListProps = {
   messages: Message[];
+  isLoading: boolean;
 };
 
-export default function MessageList({ messages }: MessageListProps) {
+export default function MessageList({ messages, isLoading }: MessageListProps) {
   if (!messages) {
     return null;
   }
 
-  return (
-    <div className='flex flex-col space-y-2 px-2'>
+  return isLoading ? (
+    <Loader className='w-12 h-12 animate-spin' />
+  ) : (
+    <div className='flex flex-col justify-center items-center space-y-2 px-2'>
       {messages.map((message) => {
         return (
           <div

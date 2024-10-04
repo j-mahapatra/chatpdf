@@ -3,7 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { OpenAIApi, Configuration } from 'openai-edge';
 import { Message, OpenAIStream, StreamingTextResponse } from 'ai';
 import { getContext } from '@/lib/context';
-import { chats } from '@/lib/schema';
+import { chats, messages as messageSchema } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 
@@ -63,7 +63,22 @@ export async function POST(request: NextRequest) {
       stream: true,
     });
 
-    const stream = OpenAIStream(completion);
+    const stream = OpenAIStream(completion, {
+      onStart: async () => {
+        await db.insert(messageSchema).values({
+          chatId,
+          content: lastMessage.content,
+          role: 'user',
+        });
+      },
+      onCompletion: async (completion) => {
+        await db.insert(messageSchema).values({
+          chatId,
+          content: completion,
+          role: 'system',
+        });
+      },
+    });
     return new StreamingTextResponse(stream);
   } catch (error) {
     console.log(`Error - POST /chat: ${error}`);
