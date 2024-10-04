@@ -28,3 +28,13 @@ export const messages = pgTable('messages', {
   role: roleEnum('role').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const userSubscriptions = pgTable('user_subscriptions', {
+  id: serial('id').primaryKey(),
+  userId: varchar('user_id').unique().notNull(),
+  stripeCustomerId: varchar('stripe_customer_id').unique().notNull(),
+  stripeSubscriptionId: varchar('stripe_subscription_id').unique(),
+  stripePriceId: varchar('stripe_price_id'),
+  stripeCurrentPeriodEnd: timestamp('stripe_current_period_end'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

@@ -1,11 +1,15 @@
 import FileUpload from '@/components/FileUpload';
+import ManageSubscription from '@/components/ManageSubscription';
 import { Button } from '@/components/ui/button';
+import { checkSubscription } from '@/lib/subscription';
 import { UserButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import { FileText, LogIn } from 'lucide-react';
 
 export default async function Home() {
   const user = await currentUser();
+
+  const isPlusUser = await checkSubscription(user?.id || '');
 
   return (
     <div className='w-screen min-h-screen bg-gradient-to-r from-indigo-300 to-purple-400'>
@@ -27,10 +31,13 @@ export default async function Home() {
           <div className='flex flex-col items-center space-y-5 mt-5'>
             {user && <FileUpload />}
             {user ? (
-              <Button className='w-fit'>
-                <FileText className='h-6 w-6 mr-2' />
-                Go to your PDFs
-              </Button>
+              <>
+                <Button className='w-fit'>
+                  <FileText className='h-6 w-6 mr-2' />
+                  Go to your PDFs
+                </Button>
+                <ManageSubscription isPlusUser={isPlusUser} />
+              </>
             ) : (
               <Button className='w-fit'>
                 <LogIn className='h-6 w-6 mr-2' /> Get Started
