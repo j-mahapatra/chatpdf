@@ -29,10 +29,6 @@ export default function ChatBox({ chatId }: { chatId: number }) {
 
   return (
     <div className='flex flex-col h-screen max-h-screen p-1'>
-      <div className='sticky top-0 inset-x-0 bg-white z-10'>
-        <h3 className='text-xl font-bold'>Chat</h3>
-      </div>
-
       <div className='flex-1 overflow-y-auto p-2 flex flex-col-reverse'>
         <MessageList
           messages={messages}

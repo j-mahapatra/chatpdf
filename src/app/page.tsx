@@ -7,6 +7,7 @@ import { UserButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { FileText, LogIn } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Home() {
@@ -56,11 +57,24 @@ export default async function Home() {
                 <ManageSubscription />
               </>
             ) : (
-              <Button className='w-fit'>
-                <LogIn className='h-6 w-6 mr-2' /> Get Started
-              </Button>
+              <Link href={`/sign-in`}>
+                <Button className='w-fit'>
+                  <LogIn className='h-6 w-6 mr-2' /> Get Started
+                </Button>
+              </Link>
             )}
           </div>
+          {!user && (
+            <div className='m-4 p-1 border border-slate-50 rounded-md'>
+              <Image
+                src='/landing-image.png'
+                alt='app-demo'
+                width={600}
+                height={600}
+                className='rounded-md shadow-lg'
+              />
+            </div>
+          )}
           <p className='text-md text-center mt-5'>
             Upload a PDF, ask any question. No more searching through pages of
             text to find the information you need. No more tedious copying and

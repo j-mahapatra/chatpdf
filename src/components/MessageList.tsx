@@ -14,7 +14,9 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
   }
 
   return isLoading ? (
-    <Loader className='w-12 h-12 animate-spin' />
+    <div className='flex h-full justify-center items-center px-2'>
+      <Loader className='w-12 h-12 animate-spin' />
+    </div>
   ) : (
     <div className='flex flex-col justify-center items-center space-y-2 px-2'>
       {messages.map((message) => {
@@ -22,8 +24,10 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           <div
             key={message.id}
             className={cn(
-              'flex items-center rounded-sm p-2 max-w-fit',
-              message.role === 'user' && 'bg-slate-600 text-black self-end',
+              'flex items-center rounded-sm p-2 max-w-fit shadow-md',
+              message.role === 'user'
+                ? 'bg-indigo-700 text-slate-100 self-end'
+                : 'self-start',
             )}
           >
             <p className='text-left overflow-hidden break-words text-sm w-fit'>
