@@ -1,3 +1,4 @@
+import FileUpload from '@/components/FileUpload';
 import { Button } from '@/components/ui/button';
 import { UserButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
@@ -23,14 +24,15 @@ export default async function Home() {
               <strong>AI</strong>
             </p>
           </div>
-          <div className='flex mt-5'>
+          <div className='flex flex-col items-center space-y-5 mt-5'>
+            {user && <FileUpload />}
             {user ? (
-              <Button>
+              <Button className='w-fit'>
                 <FileText className='h-6 w-6 mr-2' />
                 Go to your PDFs
               </Button>
             ) : (
-              <Button>
+              <Button className='w-fit'>
                 <LogIn className='h-6 w-6 mr-2' /> Get Started
               </Button>
             )}
