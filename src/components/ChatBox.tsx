@@ -7,10 +7,13 @@ import MessageList from './MessageList';
 import { Send } from 'lucide-react';
 import { Button } from './ui/button';
 
-export default function ChatBox() {
+export default function ChatBox({ chatId }: { chatId: number }) {
   const { messages, input, handleSubmit, handleInputChange, isLoading } =
     useChat({
       api: '/api/chat',
+      body: {
+        chatId,
+      },
     });
 
   return (

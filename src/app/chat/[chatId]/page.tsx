@@ -42,7 +42,7 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
           <PDFViewer url={currentChat.url} />
         </div>
         <div className='flex-[3] border-l-4 border-l-slate-500'>
-          <ChatBox />
+          <ChatBox chatId={parseInt(chatId)} />
         </div>
       </div>
     </div>
