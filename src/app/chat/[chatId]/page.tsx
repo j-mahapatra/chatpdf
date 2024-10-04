@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { chats } from '@/lib/schema';
 import ChatSidebar from '@/components/ChatSidebar';
+import PDFViewer from '@/components/PDFViewer';
 
 type ChatPageProps = {
   params: {
@@ -24,7 +25,9 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
     .from(chats)
     .where(eq(chats.userId, userId));
 
-  if (!chatList || !chatList.some((chat) => chat.id === parseInt(chatId))) {
+  const currentChat = chatList.find((chat) => chat.id === parseInt(chatId));
+
+  if (!chatList || !currentChat) {
     return redirect('/');
   }
 
@@ -35,7 +38,7 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
           <ChatSidebar chats={chatList} chatId={parseInt(chatId)} />
         </div>
         <div className='max-h-screen p-5 overflow-auto flex-[5]'>
-          PDF Viewer
+          <PDFViewer url={currentChat.url} />
         </div>
         <div className='flex-[3] border-l-4 border-l-slate-500'>
           Chat Component
