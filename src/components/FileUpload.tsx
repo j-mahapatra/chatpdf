@@ -8,15 +8,18 @@ import { FilePlus2, Loader } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { uploadToS3 } from '@/lib/s3';
 import { FileObject } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 
 export default function FileUpload() {
+  const router = useRouter();
+
   const { mutate, isPending } = useMutation({
     mutationFn: async ({ fileKey, fileName }: FileObject) => {
       const response = await axios.post('/api/create-chat', {
         fileKey,
         fileName,
       });
-      const data: FileObject = response.data;
+      const data = response.data;
       return data;
     },
   });
@@ -45,8 +48,9 @@ export default function FileUpload() {
         }
 
         mutate(fileData, {
-          onSuccess: () => {
+          onSuccess: ({ chatId }) => {
             toast.success('File uploaded successfully');
+            router.push(`/chat/${chatId}`);
           },
           onError: () => {
             toast.error('Failed to upload file');
