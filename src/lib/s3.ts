@@ -1,9 +1,4 @@
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from '@aws-sdk/client-s3';
-import fs from 'fs';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { fileNameToUrl } from './utils';
 
 const client = new S3Client({
@@ -33,28 +28,6 @@ export async function uploadToS3(file: File) {
     fileKey: fileKey,
     fileName: file.name,
   };
-}
-
-async function streamToBuffer(stream: any): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    stream.on('data', (chunk: Buffer) => chunks.push(chunk));
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-    stream.on('error', reject);
-  });
-}
-
-export async function downloadFromS3(fileKey: string) {
-  const input = {
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
-    Key: fileKey,
-  };
-  const command = new GetObjectCommand(input);
-  const response = await client.send(command);
-  const saveDir = `/tmp/pdf-${Date.now()}.pdf`;
-  const fileBuffer = await streamToBuffer(response.Body);
-  fs.writeFileSync(saveDir, fileBuffer);
-  return saveDir;
 }
 
 export function getS3Url(fileKey: string) {
