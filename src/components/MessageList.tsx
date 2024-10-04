@@ -18,11 +18,11 @@ export default function MessageList({ messages }: MessageListProps) {
           <div
             key={message.id}
             className={cn(
-              'flex space-x-2 items-center rounded-sm p-2',
-              message.role === 'user' && 'bg-slate-600 text-black',
+              'flex items-center rounded-sm p-2 max-w-fit',
+              message.role === 'user' && 'bg-slate-600 text-black self-end',
             )}
           >
-            <p className='text-left overflow-hidden truncate text-sm'>
+            <p className='text-left overflow-hidden break-words text-sm w-fit'>
               {message.content}
             </p>
           </div>
