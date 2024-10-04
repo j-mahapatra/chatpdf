@@ -4,6 +4,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import fs from 'fs';
+import { fileNameToUrl } from './utils';
 
 const client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -14,8 +15,7 @@ const client = new S3Client({
 });
 
 export async function uploadToS3(file: File) {
-  const fileKey =
-    'uploads/' + Date.now().toString() + file.name.replace(' ', '-');
+  const fileKey = `uploads/${Date.now().toString()}-${fileNameToUrl(file.name)}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,

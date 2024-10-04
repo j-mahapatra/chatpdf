@@ -13,3 +13,14 @@ export function truncateStringByBytes(str: string, bytes: number) {
 export function convertToASCII(str: string) {
   return str.replace(/[^\x00-\x7F]/g, '');
 }
+
+export function fileNameToUrl(fileName: string): string {
+  return fileName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}

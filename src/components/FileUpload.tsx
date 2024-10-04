@@ -19,7 +19,7 @@ export default function FileUpload() {
         fileKey,
         fileName,
       });
-      const data = response.data;
+      const { data } = response.data;
       return data;
     },
   });
@@ -34,6 +34,11 @@ export default function FileUpload() {
       }
       try {
         const file = acceptedFiles[0];
+
+        if (!file) {
+          toast.error('Invalid file selected');
+          return;
+        }
 
         if (file.size > 10 * 1024 * 1024) {
           toast.error('File is too big. Maximum of 10MB is allowed.');
