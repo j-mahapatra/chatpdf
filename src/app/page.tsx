@@ -1,15 +1,31 @@
 import FileUpload from '@/components/FileUpload';
 import ManageSubscription from '@/components/ManageSubscription';
 import { Button } from '@/components/ui/button';
+import { db } from '@/lib/db';
+import { chats } from '@/lib/schema';
 import { checkSubscription } from '@/lib/subscription';
 import { UserButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
+import { eq } from 'drizzle-orm';
 import { FileText, LogIn } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function Home() {
   const user = await currentUser();
 
   const isPlusUser = await checkSubscription(user?.id || '');
+
+  let firstChat;
+
+  if (user) {
+    const chatsList = await db
+      .select()
+      .from(chats)
+      .where(eq(chats.userId, user.id));
+    if (chatsList && chatsList.length > 0) {
+      firstChat = chatsList[0];
+    }
+  }
 
   return (
     <div className='w-screen min-h-screen bg-gradient-to-r from-indigo-300 to-purple-400'>
@@ -32,10 +48,14 @@ export default async function Home() {
             {user && <FileUpload />}
             {user ? (
               <>
-                <Button className='w-fit'>
-                  <FileText className='h-6 w-6 mr-2' />
-                  Go to your PDFs
-                </Button>
+                {user && firstChat && (
+                  <Link href={`/chat/${firstChat.id}`}>
+                    <Button className='w-fit'>
+                      <FileText className='h-6 w-6 mr-2' />
+                      Go to your PDFs
+                    </Button>
+                  </Link>
+                )}
                 <ManageSubscription isPlusUser={isPlusUser} />
               </>
             ) : (
