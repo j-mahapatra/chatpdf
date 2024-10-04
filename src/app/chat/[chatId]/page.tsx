@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { chats } from '@/lib/schema';
 import ChatSidebar from '@/components/ChatSidebar';
 import PDFViewer from '@/components/PDFViewer';
+import ChatBox from '@/components/ChatBox';
 
 type ChatPageProps = {
   params: {
@@ -41,7 +42,7 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
           <PDFViewer url={currentChat.url} />
         </div>
         <div className='flex-[3] border-l-4 border-l-slate-500'>
-          Chat Component
+          <ChatBox />
         </div>
       </div>
     </div>
