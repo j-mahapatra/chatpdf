@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'ChatPDF',
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <ClerkProvider>
-        <body className={`${inter.variable} antialiased`}>{children}</body>
+        <body className={`${inter.variable} antialiased`}>
+          <Toaster />
+          {children}
+        </body>
       </ClerkProvider>
     </html>
   );

@@ -1,15 +1,33 @@
 'use client';
 
+import { uploadToS3 } from '@/lib/s3';
 import { FilePlus2 } from 'lucide-react';
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
+import toast from 'react-hot-toast';
 
 export default function FileUpload() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { 'application/pdf': ['.pdf'] },
     maxFiles: 1,
-    onDrop: (acceptedFiles) => {
-      console.log(acceptedFiles);
+    onDrop: async (acceptedFiles) => {
+      if (!acceptedFiles) {
+        toast.error('Invalid file selected');
+        return;
+      }
+      try {
+        const file = acceptedFiles[0];
+
+        if (file.size > 10 * 1024 * 1024) {
+          toast.error('File is too big. Maximum of 10MB is allowed.');
+          return;
+        }
+
+        const fileData = await uploadToS3(file);
+        console.log(fileData);
+      } catch (_) {
+        toast.error('Failed to upload file');
+      }
     },
   });
 
