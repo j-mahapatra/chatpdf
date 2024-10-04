@@ -1,4 +1,5 @@
 import { Document } from '@langchain/core/documents';
+import { chats } from './schema';
 
 export type FileObject = {
   fileKey: string;
@@ -16,3 +17,5 @@ export interface PDFDocument extends Document {
     };
   };
 }
+
+export type Chat = typeof chats.$inferSelect;
