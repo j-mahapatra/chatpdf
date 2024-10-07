@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'react-hot-toast';
 import QueryProvider from '@/components/QueryProvider';
+import { UploadLimitModalProvider } from '@/components/UploadLimitModalProvider';
 
 export const metadata: Metadata = {
   title: 'ChatPDF',
@@ -23,12 +24,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <QueryProvider>
-        <html lang='en'>
-          <body className={`${inter.variable} antialiased`}>
-            <Toaster />
-            {children}
-          </body>
-        </html>
+        <UploadLimitModalProvider>
+          <html lang='en'>
+            <body className={`${inter.variable} antialiased`}>
+              <Toaster />
+              {children}
+            </body>
+          </html>
+        </UploadLimitModalProvider>
       </QueryProvider>
     </ClerkProvider>
   );
