@@ -9,9 +9,14 @@ import { useDropzone } from 'react-dropzone';
 import { uploadToS3 } from '@/lib/s3';
 import { FileObject } from '@/lib/types';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
+import { checkUserUploadLimit } from '@/lib/validations';
+import { useUploadLimitModal } from './UploadLimitModalProvider';
 
 export default function FileUpload() {
   const router = useRouter();
+  const { user } = useUser();
+  const { openModal } = useUploadLimitModal();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({ fileKey, fileName }: FileObject) => {
@@ -43,6 +48,20 @@ export default function FileUpload() {
         if (file.size > 10 * 1024 * 1024) {
           toast.error('File is too big. Maximum of 10MB is allowed.');
           return;
+        }
+
+        try {
+          const isUserAllowedToUpload = await checkUserUploadLimit(
+            user?.id ?? '',
+          );
+
+          if (!isUserAllowedToUpload) {
+            openModal();
+            return;
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error('Something went wrong! Please try again.');
         }
 
         const fileData = await uploadToS3(file);

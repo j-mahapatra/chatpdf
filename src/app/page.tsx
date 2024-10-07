@@ -1,6 +1,7 @@
 import FileUpload from '@/components/FileUpload';
 import ManageSubscription from '@/components/ManageSubscription';
 import { Button } from '@/components/ui/button';
+import UploadLimitModal from '@/components/UploadLimitModal';
 import { db } from '@/lib/db';
 import { chats } from '@/lib/schema';
 import { UserButton } from '@clerk/nextjs';
@@ -44,6 +45,7 @@ export default async function Home() {
           </div>
           <div className='flex flex-col items-center space-y-5 mt-5'>
             {user && <FileUpload />}
+            {user && <UploadLimitModal />}
             {user ? (
               <>
                 {user && firstChat && (
