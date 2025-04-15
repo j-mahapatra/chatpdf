@@ -5,10 +5,5 @@ type PDFViewerProps = {
 };
 
 export default function PDFViewer({ url }: PDFViewerProps) {
-  return (
-    <iframe
-      src={`https://docs.google.com/gview?url=${url}&embedded=true`}
-      className='w-full h-full'
-    />
-  );
+  return <iframe src={url} className='w-full h-full' title='PDF Viewer' />;
 }

@@ -7,6 +7,16 @@ import { chats } from '@/lib/schema';
 import ChatSidebar from '@/components/ChatSidebar';
 import PDFViewer from '@/components/PDFViewer';
 import ChatBox from '@/components/ChatBox';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+const client = new S3Client({
+  region: process.env.NEXT_PUBLIC_AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+  },
+});
 
 type ChatPageProps = {
   params: {
@@ -32,6 +42,16 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
     return redirect('/');
   }
 
+  const input = {
+    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+    Key: currentChat.s3Key,
+  };
+  const command = new GetObjectCommand(input);
+
+  const presignedUrl = await getSignedUrl(client as any, command as any, {
+    expiresIn: 3600,
+  });
+
   return (
     <div className='flex max-h-screen overflow-auto'>
       <div className='flex w-full max-h-screen overflow-auto'>
@@ -39,7 +59,7 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
           <ChatSidebar chats={chatList} chatId={parseInt(chatId)} />
         </div>
         <div className='max-h-screen p-5 overflow-auto flex-[5]'>
-          <PDFViewer url={currentChat.url} />
+          <PDFViewer url={presignedUrl} />
         </div>
         <div className='flex-[3] border-l-4 border-l-slate-500'>
           <ChatBox chatId={parseInt(chatId)} />

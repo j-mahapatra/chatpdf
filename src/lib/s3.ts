@@ -16,6 +16,7 @@ export async function uploadToS3(file: File) {
     Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
     Key: fileKey,
     Body: file,
+    ContentType: 'application/pdf',
   });
 
   const response = await client.send(command);
