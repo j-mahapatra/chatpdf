@@ -6,6 +6,7 @@ import { MessageSquareMore, SquarePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ManageSubscription from './ManageSubscription';
 import UserUploadCount from '@/components/UserUploadCount';
+import { UserButton } from '@clerk/nextjs';
 
 type ChatSidebarProps = {
   chats: Chat[];
@@ -45,9 +46,12 @@ export default function ChatSidebar({ chats, chatId }: ChatSidebarProps) {
         <ManageSubscription
           className={'bg-slate-500 hover:bg-slate-400 text-slate-950'}
         />
-        <Link href='/' className='text-xs mt-2'>
-          Powered by <strong>ChatPDF</strong>
-        </Link>
+        <div className='flex space-x-2 w-full justify-center my-2'>
+          <UserButton />
+          <Link href='/' className='text-xs mt-2'>
+            Powered by <strong>ChatPDF</strong>
+          </Link>
+        </div>
       </div>
     </div>
   );
