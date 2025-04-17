@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import { FilePlus2, Loader } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
-import { uploadToS3 } from '@/lib/s3';
 import { FileObject } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
@@ -64,12 +63,37 @@ export default function FileUpload() {
           toast.error('Something went wrong! Please try again.');
         }
 
-        const fileData = await uploadToS3(file);
+        const fileName = file.name;
 
-        if (!fileData) {
-          toast.error('Failed to upload file');
+        const presignResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/s3/presigned-url?fileName=${encodeURIComponent(fileName)}`,
+        );
+
+        if (!presignResponse.ok) {
+          toast.error('Could not get upload URL');
           return;
         }
+
+        const { uploadURL, fileName: returnedFileName } =
+          await presignResponse.json();
+
+        const uploadRes = await fetch(uploadURL, {
+          method: 'PUT',
+          headers: { 'Content-Type': file.type },
+          body: file,
+        });
+
+        if (!uploadRes.ok) {
+          toast.error('Failed to upload to S3');
+          return;
+        }
+
+        const fileKey = uploadURL.split('?')[0].split('.com/')[1];
+
+        const fileData = {
+          fileKey,
+          fileName: returnedFileName,
+        };
 
         mutate(fileData, {
           onSuccess: ({ chatId }) => {

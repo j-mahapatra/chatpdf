@@ -3,7 +3,6 @@ import { FileObject } from '@/lib/types';
 import { loadS3IntoPinecone } from '@/lib/pinecone';
 import { db } from '@/db';
 import { chats } from '@/db/schema';
-import { getS3Url } from '@/lib/s3';
 import { auth } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
       .values({
         s3Key: fileKey,
         name: fileName,
-        url: getS3Url(fileKey),
+        url: `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`,
         userId: user.userId,
       })
       .returning({

@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const returnUrl = `${process.env.NEXT_BASE_URL}/`;
+  const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/`;
   try {
     const user = await currentUser();
 
