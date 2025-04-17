@@ -33,6 +33,7 @@ export default function ChatBox({ chatId }: { chatId: number }) {
         <MessageList
           messages={messages}
           isLoading={areInitialMessagesLoading}
+          isResponseLoading={isLoading}
         />
       </div>
 
@@ -44,9 +45,12 @@ export default function ChatBox({ chatId }: { chatId: number }) {
           value={input}
           placeholder='Ask a question...'
           onChange={handleInputChange}
-          disabled={isLoading}
+          disabled={isLoading || areInitialMessagesLoading}
         />
-        <Button className='bg-indigo-700 hover:bg-indigo-800'>
+        <Button
+          className='bg-indigo-700 hover:bg-indigo-800'
+          disabled={isLoading || areInitialMessagesLoading}
+        >
           <Send className='h-6 w-6' />
         </Button>
       </form>

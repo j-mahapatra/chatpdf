@@ -2,13 +2,19 @@ import { cn } from '@/lib/utils';
 import { Message } from 'ai/react';
 import { Loader } from 'lucide-react';
 import React from 'react';
+import ChatLoader from './ChatLoader';
 
 type MessageListProps = {
   messages: Message[];
   isLoading: boolean;
+  isResponseLoading: boolean;
 };
 
-export default function MessageList({ messages, isLoading }: MessageListProps) {
+export default function MessageList({
+  messages,
+  isLoading,
+  isResponseLoading,
+}: MessageListProps) {
   if (!messages) {
     return null;
   }
@@ -36,6 +42,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           </div>
         );
       })}
+      {isResponseLoading ? <ChatLoader /> : null}
     </div>
   );
 }
