@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       .values({
         s3Key: fileKey,
         name: fileName,
-        url: `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileKey}`,
+        url: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`,
         userId: user.userId,
       })
       .returning({

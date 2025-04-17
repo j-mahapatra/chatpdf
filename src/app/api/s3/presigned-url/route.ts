@@ -6,10 +6,10 @@ import { fileNameToUrl } from '@/lib/utils';
 import { currentUser } from '@clerk/nextjs/server';
 
 const client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION,
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const fileKey = `uploads/${user.id}/${Date.now().toString()}-${fileNameToUrl(fileName)}`;
 
     const command = new PutObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+      Bucket: process.env.AWS_BUCKET_NAME!,
       Key: fileKey,
       ContentType: 'application/pdf',
     });

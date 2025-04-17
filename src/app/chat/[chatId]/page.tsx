@@ -11,10 +11,10 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION!,
+  region: process.env.AWS_REGION!,
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -43,7 +43,7 @@ export default async function ChatPage({ params: { chatId } }: ChatPageProps) {
   }
 
   const input = {
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+    Bucket: process.env.AWS_BUCKET_NAME!,
     Key: currentChat.s3Key,
   };
   const command = new GetObjectCommand(input);

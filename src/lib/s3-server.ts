@@ -2,10 +2,10 @@ import fs from 'fs';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION,
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -20,7 +20,7 @@ async function streamToBuffer(stream: any): Promise<Buffer> {
 
 export async function downloadFromS3(fileKey: string) {
   const input = {
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
+    Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileKey,
   };
   const command = new GetObjectCommand(input);
