@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FileObject } from '@/lib/types';
 import { loadS3IntoPinecone } from '@/lib/pinecone';
-import { db } from '@/lib/db';
-import { chats } from '@/lib/schema';
+import { db } from '@/db';
+import { chats } from '@/db/schema';
 import { getS3Url } from '@/lib/s3';
 import { auth } from '@clerk/nextjs/server';
 

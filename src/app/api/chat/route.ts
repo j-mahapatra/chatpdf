@@ -3,9 +3,9 @@ import { auth } from '@clerk/nextjs/server';
 import { OpenAIApi, Configuration } from 'openai-edge';
 import { Message, OpenAIStream, StreamingTextResponse } from 'ai';
 import { getContext } from '@/lib/context';
-import { chats, messages as messageSchema } from '@/lib/schema';
+import { chats, messages as messageSchema } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { db } from '@/lib/db';
+import { db } from '@/db';
 
 export const runtime = 'edge';
 

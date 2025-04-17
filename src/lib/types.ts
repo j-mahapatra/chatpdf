@@ -1,5 +1,5 @@
 import { Document } from '@langchain/core/documents';
-import { chats } from './schema';
+import { chats } from '@/db/schema';
 
 export type FileObject = {
   fileKey: string;

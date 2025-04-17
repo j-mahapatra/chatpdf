@@ -1,5 +1,5 @@
-import { db } from '@/lib/db';
-import { userSubscriptions } from '@/lib/schema';
+import { db } from '@/db';
+import { userSubscriptions } from '@/db/schema';
 import { stripe } from '@/lib/stripe';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
