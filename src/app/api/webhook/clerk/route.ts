@@ -5,7 +5,6 @@ import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: NextRequest) {
-  console.log('request happened');
   const body = await req.json();
 
   if (body.type === 'user.created' || body.type === 'user.updated') {
