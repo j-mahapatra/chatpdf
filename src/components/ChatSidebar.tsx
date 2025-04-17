@@ -7,15 +7,21 @@ import { cn } from '@/lib/utils';
 import ManageSubscription from './ManageSubscription';
 import UserUploadCount from '@/components/UserUploadCount';
 import { UserButton } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 
 type ChatSidebarProps = {
   chats: Chat[];
   chatId: Chat['id'];
 };
 
-export default function ChatSidebar({ chats, chatId }: ChatSidebarProps) {
+export default async function ChatSidebar({ chats, chatId }: ChatSidebarProps) {
+  const user = await currentUser();
   return (
     <div className='relative flex flex-col w-full h-screen p-4 text-slate-200 bg-slate-900'>
+      <div className='flex space-x-2 w-full justify-center items-center mb-5 border-b border-accent/30 pb-3'>
+        <UserButton />
+        <span>{`${user?.firstName ?? ''} ${user?.lastName ?? ''}`}</span>
+      </div>
       <Link href='/'>
         <Button className='w-full bg-indigo-700 hover:bg-indigo-800'>
           <SquarePlus className='w-6 h-6 mr-2' />
@@ -46,12 +52,9 @@ export default function ChatSidebar({ chats, chatId }: ChatSidebarProps) {
         <ManageSubscription
           className={'bg-slate-500 hover:bg-slate-400 text-slate-950'}
         />
-        <div className='flex space-x-2 w-full justify-center my-2'>
-          <UserButton />
-          <Link href='/' className='text-xs mt-2'>
-            Powered by <strong>ChatPDF</strong>
-          </Link>
-        </div>
+        <Link href='/' className='text-xs mt-2'>
+          Powered by <strong>ChatPDF</strong>
+        </Link>
       </div>
     </div>
   );
